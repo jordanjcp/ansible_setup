@@ -13,7 +13,8 @@
         - htop
         - neovim
         - net-tools
-        - openssh
+        - openssh-server
+        - openssh-client
         - ranger
         - rsync
         - tmux
