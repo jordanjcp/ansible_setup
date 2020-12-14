@@ -39,6 +39,11 @@
       minute: "*/10"
       job: ansible-pull -o -U https://github.com/jordanjcp/ansible_setup.git
 
+  - name: remove existing bashrc
+    file:
+      path: /home/jordan/.bashrc
+      state: absent
+      
   - name: touch .bashrc in jordan home
     file:
       path: /home/jordan/.bashrc
