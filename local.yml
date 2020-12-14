@@ -11,6 +11,7 @@
         - cron
         - git
         - htop
+        - keychain
         - neovim
         - net-tools
         - openssh-server
