@@ -53,7 +53,7 @@
 
   - name: copy bash folder into .config
     copy:
-     src: files/bash/
+     src: files/bash
      dest: /home/jordan/.config/
      owner: jordan
      group: jordan
