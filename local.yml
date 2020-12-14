@@ -37,3 +37,25 @@
       user: ansible
       minute: "*/10"
       job: ansible-pull -o -U https://github.com/jordanjcp/ansible_setup.git
+
+  - name: touch .bashrc in jordan home
+    file:
+      path: /home/jordan/.bashrc
+      state: touch
+      owner: jordan
+      group: jordan
+
+  - name: copy bash folder into .config
+    copy:
+     src: files/bash/
+     dest: /home/jordan/.config/
+     owner: jordan
+     group: jordan
+
+  - name: symbolic link .bashrc in home to .config version
+    file:
+      src: /home/jordan/.config/bash/bashrc
+      dest: /home/jordan/.bashrc
+      owner: jordan
+      group: jordan
+      state: link
