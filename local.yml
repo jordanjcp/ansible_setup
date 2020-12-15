@@ -40,18 +40,20 @@
       minute: "*/10"
       job: ansible-pull -o -U https://github.com/jordanjcp/ansible_setup.git
 
-  - name: copy bash config
+  - name: Clone config repo to home/ansible/repos
+    git:
+      repo: https://github.com/jordanjcp/config.git
+      dest: /home/ansible/repos/config
+      separate_git_dir: /home/ansible/repos/config_git
+
+  - name: copy bash config for user jordan
     copy:
-      src: https://raw.githubusercontent.com/jordanjcp/config/main/bash/{{ item }}
-      dest: /home/jordan/.config/bash/{{ item }}
+      src: /home/ansible/repos/config/bash
+      dest: /home/jordan/.config/
       owner: jordan
       group: jordan
-      remote_src: yes
-    with_items:
-      - bashrc
-      - bash_aliases
 
-  - name: symbolic link .bashrc in home to .config version
+  - name: symbolic link .bashrc for user jordan
     file:
       src: /home/jordan/.config/bash/bashrc
       dest: /home/jordan/.bashrc
