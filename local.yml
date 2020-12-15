@@ -40,15 +40,9 @@
       minute: "*/10"
       job: ansible-pull -o -U https://github.com/jordanjcp/ansible_setup.git
 
-  - name: Clone config repo to home/ansible/repos
-    git:
-      repo: https://github.com/jordanjcp/config.git
-      dest: /home/ansible/repos/config
-      separate_git_dir: /home/ansible/repos/config_git
-
   - name: copy bash config for user jordan
     copy:
-      src: /home/ansible/repos/config/bash
+      src: config/bash
       dest: /home/jordan/.config/
       owner: jordan
       group: jordan
