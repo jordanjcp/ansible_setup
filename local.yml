@@ -42,7 +42,7 @@
 
   - name: copy bash config
     copy:
-      src: https://github.com/jordanjcp/config/tree/main/bash/{{ item }}
+      src: https://github.com/jordanjcp/config/blob/main/bash/{{ item }}
       dest: /home/jordan/.config/bash/{{ item }}
       owner: jordan
       group: jordan
