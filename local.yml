@@ -42,8 +42,8 @@
 
   - name: copy bash config from github.com/jordan/config/tree/main/bash
     copy:
-     src: https://github.com/jordanjcp/config/tree/main/bash
-     dest: /home/jordan/.config/
+     src: https://github.com/jordanjcp/config/tree/main/bash/
+     dest: /home/jordan/.config/bash/
      owner: jordan
      group: jordan
      remote_src: yes
