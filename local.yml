@@ -55,3 +55,22 @@
       owner: jordan
       group: jordan
       state: link
+
+  - name: symbolic link tmux.conf for user jordan
+      file:
+        src: /home/jordan/.config/tmux/tmux.conf
+        dest: /home/jordan/.tmux.conf
+        force: yes
+        owner: jordan
+        group: jordan
+        state: link
+
+  - name: copy termite terminfo to jordan home
+    copy:
+      src: /files/termite.terminfo
+      dest: /home/jordan/termite.terminfo
+      owner: jordan
+      group: jordan
+
+  - name: tic -x termite.terminfo command
+    command: tic -x /home/jordan/termite.terminfo
