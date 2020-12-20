@@ -42,8 +42,8 @@
 
   - name: copy config for user jordan
     copy:
-      src: config
-      dest: /home/jordan/.config
+      src: config/
+      dest: /home/jordan/.config/
       owner: jordan
       group: jordan
 
