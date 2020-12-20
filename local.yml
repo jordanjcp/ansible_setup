@@ -14,11 +14,11 @@
         - htop
         - keychain
         - neovim
-        - net-tools
         - openssh-server
         - openssh-client
         - ranger
         - rsync
+        - termite
         - tmux
 
   - name: add ansible user
@@ -41,10 +41,10 @@
       minute: "*/10"
       job: ansible-pull -o -U https://github.com/jordanjcp/ansible_setup.git
 
-  - name: copy bash config for user jordan
+  - name: copy config for user jordan
     copy:
-      src: config/bash
-      dest: /home/jordan/.config/
+      src: config
+      dest: /home/jordan/.config
       owner: jordan
       group: jordan
 
