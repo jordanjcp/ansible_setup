@@ -67,7 +67,7 @@
 
   - name: copy termite terminfo to jordan home
     copy:
-      src: /files/termite.terminfo
+      src: files/termite.terminfo
       dest: /home/jordan/termite.terminfo
       owner: jordan
       group: jordan
