@@ -74,3 +74,15 @@
 
   - name: tic -x termite.terminfo command
     command: tic -x /home/jordan/termite.terminfo
+
+  - name: Enabling, Starting, and Reloading ssh and cron
+    service:
+      name: cron
+      enabled: yes
+      state: reloaded
+      state: restarted
+    service:
+      name: ssh
+      enabled: yes
+      state: reloaded
+      state: restarted
