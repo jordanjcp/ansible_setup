@@ -1,88 +1,66 @@
----
-- hosts: localhost
-  connection: local
+# tasks to complete before running roles
+- hosts: all
+  tags: always
   become: true
+  pre_tasks:
+    - name: pre-run | update package cache (arch)
+      tags: always
+      pacman: update_cache=yes
+      changed_when: False
+      when: ansible_distribution == "Archlinux"
 
+    - name: pre-run | update package cache (debian, etc)
+      tags: always
+      apt: update_cache=yes
+      changed_when: False
+      when: ansible_distribution in ["Debian", "Pop!_OS", "Ubuntu"]
+
+# run roles
+- hosts: all
+  tags: base
+  become: true
+  roles:
+    - base
+
+#- hosts: workstation
+#  tags: workstation
+#  become: true
+#  roles:
+#    - workstation
+#
+#- hosts: server
+#  tags: server
+#  become: true
+#  roles:
+#    - server
+
+# end of run cleanup and reporting
+- hosts: all
+  become: true
   tasks:
-  - name: install packages
-    package:
-      name:
-        - ansible
-        - cron
-        - fzf
-        - git
-        - htop
-        - keychain
-        - neovim
-        - openssh-server
-        - openssh-client
-        - ranger
-        - rsync
-        - tmux
+  - name: cleanup package cache (debian and ubuntu)
+    tags: always
+    apt:
+      autoclean: yes
+    changed_when: false
+    when: ansible_distribution in ["Debian", "Pop!_OS", "Ubuntu"]
 
-  - name: add ansible user
-    user:
-      name: ansible
-      system: yes
+  - name: autoremove orphan packages (debian and ubuntu)
+    tags: always
+    apt:
+      autoremove: yes
+      purge: yes
+    when: ansible_distribution in ["Debian", "Pop!_OS", "Ubuntu"]
 
-  - name: set up sudo for ansible user
-    copy:
-      src: files/sudoer_ansible
-      dest: /etc/sudoers.d/ansible
-      owner: root
-      group: root
-      mode: 0440
+    #  - name: send completion alert
+    #include_tasks: playbooks/send_completion_alert.yml
+    #tags: always
+    #when:
+    #  - task_failed is not defined
 
-  - name: add ansible-pull cron job
-    cron:
-      name: ansible auto-provision
-      user: ansible
-      minute: "*/10"
-      job: ansible-pull -o -U https://github.com/jordanjcp/ansible_setup.git
-
-  - name: copy config for user jordan
-    copy:
-      src: config/
-      dest: /home/jordan/.config/
-      owner: jordan
-      group: jordan
-
-  - name: symbolic link .bashrc for user jordan
-    file:
-      src: /home/jordan/.config/bash/bashrc
-      dest: /home/jordan/.bashrc
-      force: yes
-      owner: jordan
-      group: jordan
-      state: link
-
-  - name: symbolic link tmux.conf for user jordan
-    file:
-      src: /home/jordan/.config/tmux/tmux.conf
-      dest: /home/jordan/.tmux.conf
-      force: yes
-      owner: jordan
-      group: jordan
-      state: link
-
-  - name: copy termite terminfo to jordan home
-    copy:
-      src: files/termite.terminfo
-      dest: /home/jordan/termite.terminfo
-      owner: jordan
-      group: jordan
-
-  - name: tic -x termite.terminfo command
-    command: tic -x /home/jordan/termite.terminfo
-
-  - name: Enabling, Starting, and Reloading ssh and cron
-    service:
-      name: cron
-      enabled: yes
-      state: reloaded
-      state: restarted
-    service:
-      name: ssh
-      enabled: yes
-      state: reloaded
-      state: restarted
+    #- name: send failure alert
+    #include_tasks: playbooks/send_failure_alert.yml
+    #tags: always
+    #when:
+    #  - task_failed is defined
+    #  - task_failed == true
