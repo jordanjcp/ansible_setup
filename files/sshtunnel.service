@@ -1,0 +1,20 @@
+[Unit]
+Description=Service to maintain an ssh reverse tunnel
+Wants=network-online.target
+After=network-online.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/ssh -Nn \
+      -o ServerAliveInterval=30 \
+      -o ServerAliveCountMax=3 \
+      -o ExitOnForwardFailure=yes \
+      -i /etc/sshtunnel/id_ed25519 \
+      -R 60000:localhost:22 \
+      tunneluser@jordanjcp.duckdns.org -p 50000
+Restart=always
+RestartSec=30
+
+[Install]
+WantedBy=multi-user.target
