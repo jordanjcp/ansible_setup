@@ -1,1 +1,4 @@
 
+[submodule "roles/base/files/dotfiles"]
+	path = roles/base/files/dotfiles
+	url = https://github.com/jordanjcp/dotfiles.git

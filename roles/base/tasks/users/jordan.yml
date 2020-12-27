@@ -1,0 +1,64 @@
+- name: users | jordan | create group
+  tags: groups,jordan,users
+  group:
+    name: jordan
+    state: present
+
+- name: users | jordan | create users
+  tags: jordan,sudo,users
+  user:
+    name: jordan
+    group: jordan
+    groups: ansible,ssh-user,{{ sudo_group }}
+    state: present
+    shell: /bin/bash
+
+- name: users | jordan | create .ssh directory
+  tags: dotfiles,jordan,ssh,users
+  file:
+    path: "{{ item.dir }}"
+    state: directory
+    owner: jordan
+    group: jordan
+    mode: 0700
+  with_items:
+    - { dir: '/home/jordan/.ssh' }
+
+- name: users | jordan | add public key
+  tags: dotfiles,jordan,ssh,ssh-keys,users
+  authorized_key:
+    user: jordan
+    key: "{{ item }}"
+  with_file:
+    - users/jordan/ssh/id_ed25519_myt430.pub
+    - users/jordan/ssh/id_ed25519_pi4.pub
+
+- name: users | jordan | create config directories
+  tags: dotfiles,jordan,tmux,users,vim,bash
+  file:
+    path: /home/jordan/{{ item.dir }}
+    state: directory
+    owner: jordan
+    group: jordan
+    mode: 0700
+  with_items:
+    - { dir: '.bash' }
+    - { dir: '.config' }
+    - { dir: '.config/htop' }
+    - { dir: '.config/nvim' }
+    - { dir: '.tmux' }
+    - { dir: '.tmux/config' }
+    - { dir: '.tmux/plugins' }
+
+- name: users | jordan | copy dotfiles
+  tags: dotfiles,users,jordan,tmux,vim,bash
+  copy:
+    src: users/jordan/{{ item.src }}
+    dest: /home/jordan/{{ item.dest }}
+    owner: jordan
+    group: jordan
+    mode: 0600
+  with_items:
+    - { src: 'bash/bash_aliases', dest: '.bash/bash_aliases' }
+    - { src: 'bash/bashrc', dest: '.bashrc' }
+    - { src: '' }
